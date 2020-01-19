@@ -1,0 +1,73 @@
+#Examples of use of regular expressions
+
+#Import required packages
+from pandas import Series, DataFrame
+import pandas as pd
+import numpy as np
+import numpy.random as npr
+import matplotlib.pyplot as plt
+import re
+import string
+
+# Function to generate a password of length n using a random combination of all 
+# of the letters (a-z). The function takes n and a seed value s as inputs and returns 
+# a string containing the password. 
+def passRando(n,s):
+    npr.seed(s)
+    mylist = list(string.ascii_lowercase)
+    password = ''.join(npr.choice(mylist) for x in range(n))
+    return(password)      
+             
+# Test
+passRando(12,12)
+# Should return 'lgrcddmqwruf'
+
+# Functio to extract the area codes of each
+# number from a list of phone number. The function takes a list of phone numbers as input and extracts the
+# area code (assuming that the area code is enclosed in parentheses, e.g. the area code
+# for (08) 03 49 98, would be 08).
+def areaExtr(phones):
+    areaCodes = re.findall('\([0-9]+\)', phones)
+    return(areaCodes)
+    
+# Tests
+ph_num1 = '(01) 12 05 25, (04) 25 23 11, (08) 03 49 98'
+areaExtr(ph_num1)
+# Should return ['(01)', '(04)', '(08)']
+ph_num2 = '(05) 73 43 12, (01) 11 34 67, (07) 91 62 46, (08) 04 23 81'
+areaExtr(ph_num2)
+# Should return ['(05)', '(01)', '(07)', '(08)']
+
+# Function to find the domains from a list of email addresses. The function extracts the characters after the @ sign 
+# for each email address and returns them as a list. 
+def domainExtr(emails):
+    domList = [re.findall('@([\w]+.[a-z]+)', x) for x in emails]
+    return(domList)
+    
+# Tests
+domainExtr(('myemail@ucd.ie','youremail@gmail.com'))
+# Should return ['ucd.ie', 'gmail.com']
+domainExtr(('test1@ucd.ie','test2@gmail.com','test2@hotmail.com'))
+# Should return ['ucd.ie', 'gmail.com','hotmail.com']
+
+# Function that finds and returns all of the email addresses in a given list of strings. Assumption:
+# all email addresses consist of a set of characters (from a-z) and digits (from 0-9), 
+# followed by an @ symbol, followed by another set of characters, followed by a full stop 
+# and finally a third set of characters (none of the email addresses will have special
+# characters, such as ? and !).
+def emailExtr(liststrings):
+    addList = [re.findall('[\w]+@[\w]+.[\w]+', x) for x in liststrings]
+    return(addList)  
+    
+# Tests
+junk_mails = ['John Koftaram <test@capahq.org> would like to connect on LinkedIn. How would you like to respond?',' Re: Your Abandoned Package For Delivery I have very vital information to give to you, but first I must have your trust before I review it to you because it may cause me my job, so I need somebody that I can trust for me to be able to review thesecret to you. Contact me at BENSON OMALU <admin@handwheel.com>','FROM DESKTOP OF MR.Manuel Medina-MoraCHIEF EXECUTIVE OFFICER E-MAIL: manuelmedina@aol.com ATTENTION BENEFICIARY']
+emailExtr(junk_mails)
+# Should return [['test@capahq.org'], ['admin@handwheel.com'], ['manuelmedina@aol.com']]
+contacts = ['Anne Bannon, email: annebannon72@gmail.com','Conor Darcy, phone: (01) 12 05 25, email: conordarcy@icloud.com','Eamonn Friel, phone: (01) 12 05 25, email: eamonnfriel88@eircom.net','Grainne Healy, email: grainnehealy@gmail.com']
+emailExtr(contacts)
+# Should return [['annebannon72@gmail.com'], ['conordarcy@icloud.com'], ['eamonnfriel88@eircom.net'], ['grainnehealy@gmail.com']]
+
+
+
+
+
